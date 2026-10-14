@@ -83,6 +83,7 @@ type session struct {
 	Idle    time.Time
 }
 type App struct {
+	oidc        *oidcLogin
 	aiActive    int
 	aiTransport http.RoundTripper
 	mu          sync.Mutex

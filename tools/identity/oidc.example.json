@@ -1,0 +1,8 @@
+{
+  "issuer": "http://127.0.0.1:9080/realms/forensics-lab",
+  "client_id": "forensics-console",
+  "allow_loopback_http": true,
+  "subjects": {
+    "REPLACE_WITH_VERIFIED_KEYCLOAK_USER_ID": "operator"
+  }
+}

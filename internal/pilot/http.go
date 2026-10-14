@@ -119,6 +119,12 @@ func (a *App) Handler() http.Handler {
 		}
 		send(w, 200, list)
 	}))
+	m.HandleFunc("GET /auth/methods", func(w http.ResponseWriter, r *http.Request) {
+		send(w, 200, map[string]bool{"oidc": a.oidc != nil})
+	})
+	m.HandleFunc("POST /auth/oidc/start", a.oidcStart)
+	m.HandleFunc("GET /auth/oidc/callback", a.oidcCallback)
+	m.HandleFunc("POST /auth/oidc/confirm", a.oidcConfirm)
 	m.HandleFunc("POST /auth/login", a.login)
 	m.HandleFunc("POST /auth/register/start", a.registrationStart)
 	m.HandleFunc("POST /auth/register/confirm", a.registrationConfirm)
@@ -127,6 +133,26 @@ func (a *App) Handler() http.Handler {
 	m.HandleFunc("DELETE /auth/session", a.guard(func(w http.ResponseWriter, r *http.Request, u string) {
 		c, _ := r.Cookie("pilot_session")
 		delete(a.sessions, c.Value)
+		http.SetCookie(w, &http.Cookie{Name: "pilot_session", Path: "/", MaxAge: -1, HttpOnly: true, SameSite: http.SameSiteStrictMode, Secure: r.TLS != nil})
+		w.WriteHeader(204)
+	}))
+	m.HandleFunc("DELETE /auth/sessions", a.guard(func(w http.ResponseWriter, r *http.Request, u string) {
+		if a.transaction(func() { a.event(u, "sessions_revoked", "", "") }) != nil {
+			fail(w, 503, "storage_unavailable")
+			return
+		}
+		for id, session := range a.sessions {
+			if session.User == u {
+				delete(a.sessions, id)
+			}
+		}
+		if a.oidc != nil {
+			for id, factor := range a.oidc.factors {
+				if factor.User == u {
+					delete(a.oidc.factors, id)
+				}
+			}
+		}
 		http.SetCookie(w, &http.Cookie{Name: "pilot_session", Path: "/", MaxAge: -1, HttpOnly: true, SameSite: http.SameSiteStrictMode, Secure: r.TLS != nil})
 		w.WriteHeader(204)
 	}))
