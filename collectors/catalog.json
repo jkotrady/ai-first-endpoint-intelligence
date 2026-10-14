@@ -1,0 +1,30 @@
+[
+  {
+    "id": "F01",
+    "name": "Identita zariadenia",
+    "source": "collectors/windows/F01_identity.c",
+    "entrypoint": "collect_F01",
+    "limitations": "Hostname, OS/build, CPU/RAM a IPv4. Chýba boot time a časová zóna."
+  },
+  {
+    "id": "F04",
+    "name": "Bežiace procesy",
+    "source": "collectors/windows/F04_processes.c",
+    "entrypoint": "collect_F04",
+    "limitations": "PID, PPID, meno; najviac 512. Cesta a čas vzniku zatiaľ chýbajú."
+  },
+  {
+    "id": "F08",
+    "name": "TCP spojenia",
+    "source": "collectors/windows/F08_tcp.c",
+    "entrypoint": "collect_F08",
+    "limitations": "IPv4 TCP/PID; najviac 512. IPv6 zatiaľ chýba."
+  },
+  {
+    "id": "F15",
+    "name": "Windows služby",
+    "source": "collectors/windows/F15_services.c",
+    "entrypoint": "collect_F15",
+    "limitations": "Viditeľné Win32 služby, stav, PID, start type, účet a binary path; najviac 512. Nezahŕňa ovládače ani služby skryté oprávneniami."
+  }
+]

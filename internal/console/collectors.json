@@ -1,0 +1,402 @@
+[
+  {
+    "id": "F01",
+    "description": "Identita endpointu: hostname, OS/build, architektúra, časová zóna, boot time, verzia agenta.",
+    "os_notes": "A; viac zdrojov pre spoľahlivú identifikáciu buildov.",
+    "privileges": "U",
+    "risk_notes": "Nízka; identifikátory zariadenia.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F02",
+    "description": "Základný hardvérový inventár: CPU, RAM, BIOS a identifikátory zariadenia.",
+    "os_notes": "A; Win32/WMI, pri výpadku WMI čiastočný natívny výsledok.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka až stredná; pomalé WMI, serial numbers.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F03",
+    "description": "Disky, zväzky, súborové systémy a voľné miesto.",
+    "os_notes": "A; absencia detailov ovládača sa uvedie osobitne.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka; neotvárať obsah celého disku.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F04",
+    "description": "Snapshot bežiacich procesov: PID, PPID, meno, dostupná cesta a čas vzniku.",
+    "os_notes": "A; Toolhelp/PSAPI, nedostupné polia zostanú explicitne neznáme.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka; pretek so zánikom procesu, PID reuse.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F05",
+    "description": "Detail určeného procesu: vlastník, príkazový riadok a spotreba zdrojov.",
+    "os_notes": "A/V; na XP môže byť príkazový riadok cez WMI; fallback bez tohto poľa.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka až stredná; argumenty môžu obsahovať tajomstvá.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F06",
+    "description": "Načítané moduly určeného procesu: cesty, adresy, veľkosti a verzia.",
+    "os_notes": "A; helper rovnakej architektúry; chránený proces = denied/partial.",
+    "privileges": "U/A",
+    "risk_notes": "Stredná; race a nedostupné moduly.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F07",
+    "description": "Vlákna určeného procesu: thread ID, vlastník, dostupné časové metriky.",
+    "os_notes": "A; bez injekcie a bez suspendovania cieľa.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka; snapshot nie je atómový.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F08",
+    "description": "TCP spojenia a listenery s PID, adresami a stavom.",
+    "os_notes": "A; XP IPv4 cesta, IPv6 detegovať a prípadné obmedzenie priznať.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka; krátko žijúce spojenia sa nemusia zachytiť.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F09",
+    "description": "UDP sockety s lokálnou adresou/portom a dostupným PID.",
+    "os_notes": "A; rodiny adries podľa capability; UDP nemá TCP stav spojenia.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka; nevyvodzovať vzdialeného peer z lokálneho bindu.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F10",
+    "description": "Sieťové adaptéry: IP adresy, DNS servery, brány a MAC.",
+    "os_notes": "A; legacy a moderné IP Helper API podľa dostupnosti.",
+    "privileges": "U",
+    "risk_notes": "Nízka; rozlíšiť internú IP od verejnej adresy pozorovanej serverom.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F11",
+    "description": "Routovacia tabuľka a metriky trás.",
+    "os_notes": "A; XP základné IPv4, neskoršie OS aj IPv6.",
+    "privileges": "U",
+    "risk_notes": "Nízka; snapshot konfigurácie.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F12",
+    "description": "ARP/neighbor cache.",
+    "os_notes": "A; XP IPv4 ARP, moderné OS aj IPv6 neighbor tabuľka.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka; cache nie je kompletný inventár siete.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F13",
+    "description": "DNS cache s časom zberu.",
+    "os_notes": "A/V; schválený `ipconfig /displaydns` s verziovaným parserom, uchovať raw výstup; bez parsera partial.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka až stredná; lokalizácia, história môže chýbať.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F14",
+    "description": "Súbor hosts a konfigurácia proxy pre systém a určený profil.",
+    "os_notes": "A; odlíšiť WinHTTP/WinINET a načítané používateľské profily.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka; proxy URL môže obsahovať citlivé údaje.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F15",
+    "description": "Služby: stav, start type, účet a executable path.",
+    "os_notes": "A; Service Control Manager.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka; čítať konfiguráciu, služby nemení.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F16",
+    "description": "Ovládače: služby typu driver a dostupné načítané moduly.",
+    "os_notes": "A/V; na nových buildoch niektoré detaily vyžadujú ďalšie práva; fallback inventár služieb.",
+    "privileges": "A/S",
+    "risk_notes": "Nízka až stredná; zoznam nie je dôkaz neprítomnosti skrytého drivera.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F17",
+    "description": "Naplánované úlohy: triggery, akcie, účty a stav.",
+    "os_notes": "A; XP Task Scheduler 1.0, 7/10/11 Task Scheduler 2.0.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka až stredná; obsah akcií môže obsahovať tajomstvá.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F18",
+    "description": "Run/RunOnce a Startup folders pre dostupné profily.",
+    "os_notes": "A; oba registry views na x64; nenačítaný profil má explicitne chýbajúce pokrytie.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka; časť persistence inventára, nie „všetky startupy“.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F19",
+    "description": "Vybrané persistence nastavenia: Winlogon, IFEO a AppInit.",
+    "os_notes": "A/V; kľúče a význam podľa OS, chýbajúca funkcia N/A.",
+    "privileges": "A",
+    "risk_notes": "Nízka; prítomnosť hodnoty sama neznamená aktívnu kompromitáciu.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F20",
+    "description": "Trvalé WMI subscriptions: filters, consumers a väzby.",
+    "os_notes": "A/V; ak WMI nie je dostupné, unsupported/degraded s dôvodom.",
+    "privileges": "A",
+    "risk_notes": "Stredná; čítať definície, nič nespúšťať.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F21",
+    "description": "Inštalovaný softvér z uninstall registrov a dostupných per-user záznamov.",
+    "os_notes": "A; moderné balíky sú doplnkový adaptér; nepoužiť `Win32_Product`.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka; inventár môže byť neúplný.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F22",
+    "description": "Záznamy nainštalovaných aktualizácií a hotfixov.",
+    "os_notes": "A/V; legacy WMI/registry, moderné zdroje podľa OS; uviesť pokrytie.",
+    "privileges": "U/A",
+    "risk_notes": "Stredná; zoznam KB nie je úplný vulnerability scanner.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F23",
+    "description": "Lokálne účty a skupiny, členstvo, disabled stav; bez hesiel/hashes.",
+    "os_notes": "A; NetAPI, doménové účty len viditeľné referencie.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka; osobné údaje a bezpečnostná konfigurácia.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F24",
+    "description": "Aktuálne prihlásené interaktívne/RDP sessions.",
+    "os_notes": "A; WTS a dostupné legacy zdroje; nepliesť s úplnou históriou.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka; používateľské identifikátory.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F25",
+    "description": "Posledné úspešné/neúspešné prihlásenia vo vybranom časovom okne.",
+    "os_notes": "A; XP legacy Security log a staré ID, 7+ Windows Event Log; auditing/retencia obmedzujú výsledok.",
+    "privileges": "A/S",
+    "risk_notes": "Stredná; nikdy tvrdiť kompletnú históriu.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F26",
+    "description": "Vybrané Security udalosti podľa povolených typov a času.",
+    "os_notes": "A; XP `.evt`/legacy API, 7+ `.evtx`/Event Log API; neexistujúca kategória N/A.",
+    "privileges": "A/S",
+    "risk_notes": "Stredná; citlivé logy, veľkosť a filtre.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F27",
+    "description": "System/Application udalosti pre konkrétny interval a filtre.",
+    "os_notes": "A; rovnaké rozdelenie legacy/moderného Event Log adaptéra.",
+    "privileges": "U/A",
+    "risk_notes": "Stredná; správy môžu obsahovať nedôveryhodný text.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F28",
+    "description": "Recent Items a LNK: odkazy na nedávne súbory s pôvodom artefaktu.",
+    "os_notes": "A/V; odlišné profilové cesty, parser LNK; bez sieťového rozlíšenia cieľa.",
+    "privileges": "U/A",
+    "risk_notes": "Stredná; posledné otvorenie sa nedá zaručiť pre každý súbor.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F29",
+    "description": "Jump Lists pre vybraných používateľov.",
+    "os_notes": "XP N/A; 7/10/11 V; parser podľa formátu, neznámy formát zachovať bez domýšľania.",
+    "privileges": "U/A",
+    "risk_notes": "Stredná; citlivá história práce.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F30",
+    "description": "MRU artefakty registrov: RecentDocs, RunMRU a Open/Save podľa OS.",
+    "os_notes": "A/V; allowlist kľúčov, oba pohľady/profily podľa capability.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka až stredná; história je čiastočná a verziovaná.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F31",
+    "description": "Prefetch: dostupné súbory a parsované metadáta spúšťania.",
+    "os_notes": "A/V; odlišné formáty/kompresia; môže byť vypnutý alebo zmazaný.",
+    "privileges": "A",
+    "risk_notes": "Stredná; artefakt sa interpretuje v kontexte verzie OS.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F32",
+    "description": "Amcache: záznamy dostupného inventára súborov/aplikácií.",
+    "os_notes": "XP N/A; 7 len ak príslušný artefakt existuje, inak N/A; 10/11 V.",
+    "privileges": "A",
+    "risk_notes": "Stredná; existencia záznamu nie je univerzálny dôkaz spustenia.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F33",
+    "description": "AppCompatCache/Shimcache z určenej registry vetvy.",
+    "os_notes": "A/V; parser musí poznať verziu OS, inak iba raw acquisition.",
+    "privileges": "A",
+    "risk_notes": "Stredná; neurčovať čas spustenia z nevhodného poľa.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F34",
+    "description": "BAM/DAM dostupné záznamy aktivity.",
+    "os_notes": "XP/7 N/A; 10/11 V podľa buildu a existencie; absencia nie je chyba agenta.",
+    "privileges": "A",
+    "risk_notes": "Nízka až stredná; neúplná história.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F35",
+    "description": "SRUM: dostupné štatistiky aplikácií a siete.",
+    "os_notes": "XP/7 N/A; 10/11 V; uzamknutá databáza = partial/deferred, VSS iba samostatne otestovaná schopnosť.",
+    "privileges": "A/S",
+    "risk_notes": "Stredná až vysoká; veľký a meniaci sa artefakt.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F36",
+    "description": "História dostupných USB zariadení a pripojených zväzkov.",
+    "os_notes": "A/V; registry a SetupAPI logy podľa OS.",
+    "privileges": "A",
+    "risk_notes": "Nízka až stredná; odlišné timestampy a identifikátory.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F37",
+    "description": "História navštívených URL a stiahnutí z vybraného podporovaného browser profilu.",
+    "os_notes": "A/V podľa nainštalovaného browsera a verzie databázy; neznámy browser unsupported.",
+    "privileges": "U/A",
+    "risk_notes": "Stredná; iba história, bez cookies, hesiel a tokenov.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F38",
+    "description": "Metadáta koša: pôvodná cesta, čas odstránenia, veľkosť.",
+    "os_notes": "A/V; XP legacy formát, 7+ nový; chýbajúci kôš N/A.",
+    "privileges": "U/A",
+    "risk_notes": "Stredná; nevynucuje obnovu odstránených dát.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F39",
+    "description": "Metadáta určených ciest: veľkosť, časy, atribúty, owner a ACL.",
+    "os_notes": "A; dostupnosť polí podľa FS/ACL, kontrola reparse points.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka až stredná; časy sú meniteľné a závisia od FS.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F40",
+    "description": "Hľadanie súborov podľa názvu/globu v povolených koreňoch.",
+    "os_notes": "A; limit hĺbky, počtu a času; bez prechodu na iný zväzok/UNC implicitne.",
+    "privileges": "U/A",
+    "risk_notes": "Stredná až vysoká; veľké stromové prehľadávanie.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F41",
+    "description": "Hľadanie súborov podľa zoznamu SHA-256 hashov.",
+    "os_notes": "A; najprv lacné filtre, streaming; legacy hash knižnica sa musí overiť.",
+    "privileges": "U/A",
+    "risk_notes": "Vysoká; čítanie obsahu mnohých súborov.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F42",
+    "description": "Hľadanie podľa Authenticode podpisu, vydavateľa alebo chýbajúceho podpisu.",
+    "os_notes": "A/V; crypto provider, root store a offline režim ovplyvnia validáciu; stav unknown je platný výsledok.",
+    "privileges": "U/A",
+    "risk_notes": "Vysoká; podpis nie je dôkaz neškodnosti, online overovanie má sieťové dopady.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F43",
+    "description": "YARA sken určených súborov s verzovanou sadou pravidiel.",
+    "os_notes": "XP/7/10/11 V; samostatná build a výkonová brána pre engine; nepodporovaný engine/rule modul = unsupported.",
+    "privileges": "U/A",
+    "risk_notes": "Vysoká; limity pravidiel, súborov, času a pamäte, externé moduly vypnuté predvolene.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F44",
+    "description": "Získanie konkrétneho súboru ako dôkazu s hashom a metadátami.",
+    "os_notes": "A; locked/access-denied = explicitný stav; VSS len tam, kde je overené a povolené.",
+    "privileges": "U/A/S",
+    "risk_notes": "Stredná až vysoká; citlivý obsah, kvóty, zmena súboru počas kopírovania.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F45",
+    "description": "Výpočet SHA-256 pre určené súbory, bez rozsiahleho hľadania.",
+    "os_notes": "A; streamovanie, poznamenať zmenu veľkosti/času počas zberu.",
+    "privileges": "U/A",
+    "risk_notes": "Stredná; I/O závisí od veľkosti súboru.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F46",
+    "description": "Výpis určenej registry vetvy: hodnoty, typy, podkľúče a dostupné metadáta.",
+    "os_notes": "A; obmedzená hĺbka, explicitný 32/64-bit view; citlivé tajné úložiská vylúčené.",
+    "privileges": "U/A",
+    "risk_notes": "Nízka až stredná; potenciálne tajomstvá v aplikačných hodnotách.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F47",
+    "description": "Logický export určenej registry vetvy do verziovaného formátu s hashom.",
+    "os_notes": "A; typ a raw bytes zachovať; nejde o bitovú kópiu hive. Binárny hive snapshot je ďalšia overovaná varianta.",
+    "privileges": "U/A/S",
+    "risk_notes": "Stredná; veľkosť exportu, neatomický živý register, vylúčené credential stores.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F48",
+    "description": "Dump pamäte konkrétneho bežiaceho procesu podľa PID + času vzniku.",
+    "os_notes": "A/V; kompatibilný DbgHelp a správna bitness; protected proces denied, bez obchádzania ochrany.",
+    "privileges": "A/S",
+    "risk_notes": "Vysoká; môže ovplyvniť cieľ, obsahovať tajomstvá a vytvoriť veľký súbor; vyžaduje explicitné schválenie.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F49",
+    "description": "Čítanie ohraničeného úseku NTFS USN journalu.",
+    "os_notes": "A/V na NTFS s dostupným journalom; FAT/exFAT alebo neexistujúci journal N/A.",
+    "privileges": "A/S",
+    "risk_notes": "Stredná až vysoká; žurnál môže byť obtočený, neobsahuje obsah súborov.",
+    "implementation_status": "planned"
+  },
+  {
+    "id": "F50",
+    "description": "Inventár NTFS alternate data streams v určených cestách.",
+    "os_notes": "A/V; XP potrebuje kompatibilný čítací adaptér, novšie OS stream enum API; ne-NTFS N/A.",
+    "privileges": "U/A",
+    "risk_notes": "Stredná až vysoká; výsledok obmedziť na metadata, obsah len cez schválený zber.",
+    "implementation_status": "planned"
+  }
+]

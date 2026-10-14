@@ -1,0 +1,12 @@
+services:
+  console:
+    build: .
+    # Linux development only: application itself binds 127.0.0.1:8080.
+    network_mode: host
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    mem_limit: 256m
+    cpus: 1
+    restart: "no"

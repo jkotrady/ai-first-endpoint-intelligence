@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "template": true,
+  "profile_id": null,
+  "image_id": null,
+  "status": "unprovisioned",
+  "created_at_utc": null,
+  "source": {
+    "provider": null,
+    "product_edition": null,
+    "media_channel": null,
+    "download_or_media_reference": null,
+    "media_sha256": null,
+    "verified_against_trusted_source": false,
+    "license_evidence_reference": null,
+    "dev_test_use_authorized": false,
+    "virtualization_rights_verified": false,
+    "evaluation_expiry_utc": null
+  },
+  "os": {
+    "version": null,
+    "architecture": null,
+    "service_pack": null,
+    "build_family": null,
+    "exact_build": null,
+    "ubr": null,
+    "locale": null,
+    "timezone": null,
+    "kb_inventory": [],
+    "patch_inventory_complete": false,
+    "runtime_versions": {},
+    "root_store_fingerprint": null
+  },
+  "virtualization": {
+    "hypervisor_version": null,
+    "machine_type_version": null,
+    "firmware_version": null,
+    "cpu_model_flags": null,
+    "accelerator": null,
+    "vcpus": null,
+    "ram_mib": null,
+    "disk_controller": null,
+    "network_adapter_driver": null,
+    "secure_boot": null,
+    "vtpm_state_reference": null
+  },
+  "baseline": {
+    "snapshot_id": null,
+    "disk_image_sha256": null,
+    "no_agent_identity": true,
+    "no_production_secrets": true,
+    "snapshot_restore_test": "not_run",
+    "network_isolation_test": "not_run"
+  },
+  "approval": {
+    "operator": null,
+    "verified_at_utc": null,
+    "notes": null
+  }
+}

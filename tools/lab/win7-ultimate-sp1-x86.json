@@ -1,0 +1,14 @@
+{
+ "id":"win7-ultimate-sp1-x86",
+ "role":"supplemental; does not replace W02 Professional",
+ "image":"work/lab/media/win7-ultimate-sp1-x86.iso",
+ "sha256":"e2c009a66d63a742941f5087acae1aa438dcbe87010bddd53884b1af6b22c940",
+ "size":2564476928,
+ "machine":"pc-i440fx-8.2",
+ "accelerator":"tcg,thread=multi",
+ "cpu":"core2duo",
+ "cpus":2,
+ "ram_mib":2048,
+ "disk_gib":40,
+ "display_device":"VGA"
+}

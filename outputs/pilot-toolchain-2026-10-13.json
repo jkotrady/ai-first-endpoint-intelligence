@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-13",
+  "compiler_packages": [
+    {
+      "package": "mingw-w64-common",
+      "version": "11.0.1-3build1",
+      "sha256": "4a42fd30fbc3838c58c929d8a4882682fc12408bb7a0e6cafa913c0f0a57c187",
+      "apt_metadata_match": true
+    },
+    {
+      "package": "mingw-w64-i686-dev",
+      "version": "11.0.1-3build1",
+      "sha256": "903e09f47c0e441f9476a32efc745430a0cc39b1c33a13ea1f1d0414a24b7970",
+      "apt_metadata_match": true
+    },
+    {
+      "package": "binutils-mingw-w64-i686",
+      "version": "2.41.90.20240122-1ubuntu1+11.4",
+      "sha256": "5236ef254532c1f4ebddbce898e884fe9cc1ac4803092211ec615cbdeba7aafb",
+      "apt_metadata_match": true
+    },
+    {
+      "package": "gcc-mingw-w64-i686-posix",
+      "version": "13.2.0-6ubuntu1+26.1",
+      "sha256": "8c63daeb59c96044c2a5c26b5a3a2b793237f3e10d3428bb659401122b8e501c",
+      "apt_metadata_match": true
+    },
+    {
+      "package": "gcc-mingw-w64-i686-posix-runtime",
+      "version": "13.2.0-6ubuntu1+26.1",
+      "sha256": "650bcd76e0c56c713428950aec8823fd517f911eaad80406907379a69d36ad0a",
+      "apt_metadata_match": true
+    },
+    {
+      "package": "gcc-mingw-w64-base",
+      "version": "13.2.0-6ubuntu1+26.1",
+      "sha256": "a30c07e807e9874ea93909448c5d6d37f9569ebe60ad32de8e490aad198538a3",
+      "apt_metadata_match": true
+    }
+  ],
+  "tls": {
+    "version": "3.6.7",
+    "source": "https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-3.6.7/mbedtls-3.6.7.tar.bz2",
+    "sha256": "a7e8bcbec0e6f761b4af24f25677626b35f762f68eef79c08677a363212d11f6",
+    "verification": "matches official GitHub release asset digest",
+    "license": "Apache-2.0 OR GPL-2.0-or-later; pilot chooses Apache-2.0"
+  },
+  "limitations": [
+    "Not code-signed",
+    "Not an OS compatibility certificate",
+    "Rebuild config uses CryptGenRandom entropy and static MinGW C99 formatting"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "keycloak": {
+    "version": "26.8.1",
+    "url": "https://github.com/keycloak/keycloak/releases/download/26.8.1/keycloak-26.8.1.tar.gz",
+    "sha256": "4e2740b181faa2ea623a1c2ecf00855935311e546046e2f857615a47ed24cbe8",
+    "size": 173928500,
+    "metadata_source": "https://api.github.com/repos/keycloak/keycloak/releases/tags/26.8.1"
+  },
+  "jdk_packages": [
+    {
+      "Package": "openjdk-25-jre-headless",
+      "Version": "25.0.4.1+1-1~24.04.4",
+      "Filename": "pool/universe/o/openjdk-25/openjdk-25-jre-headless_25.0.4.1+1-1~24.04.4_amd64.deb",
+      "Size": "58953814",
+      "SHA256": "69ea4a11058674dcaf9953bcee61e6a39ae3715b304c58767f92e84753343ce8"
+    },
+    {
+      "Package": "openjdk-25-jdk-headless",
+      "Version": "25.0.4.1+1-1~24.04.4",
+      "Filename": "pool/universe/o/openjdk-25/openjdk-25-jdk-headless_25.0.4.1+1-1~24.04.4_amd64.deb",
+      "Size": "89153436",
+      "SHA256": "f20d7ccb9a1430f133394faf81b957867504c0c5f9ca9426a48d451ebcdd1b92"
+    }
+  ],
+  "jdk_source": "configured Ubuntu noble-updates/noble-security package metadata; no host install"
+}

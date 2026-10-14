@@ -1,0 +1,964 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Internal forensics pilot API",
+    "version": "0.3.0",
+    "description": "Local pilot, not final signed protocol T012. UI mutations require exact Origin header. Agent routes use a separate TLS listener. See ../PILOT-PROTOCOL.md."
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8080"
+    }
+  ],
+  "security": [
+    {
+      "session": []
+    }
+  ],
+  "paths": {
+    "/healthz": {
+      "get": {
+        "summary": "Health",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          }
+        },
+        "security": []
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Password and TOTP login",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "enum": [
+                "http://127.0.0.1:8080",
+                "http://localhost:8080"
+              ]
+            }
+          }
+        ],
+        "security": []
+      }
+    },
+    "/auth/session": {
+      "delete": {
+        "summary": "Logout",
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          }
+        },
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "enum": [
+                "http://127.0.0.1:8080",
+                "http://localhost:8080"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/api/me": {
+      "get": {
+        "summary": "Current grants",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          }
+        }
+      }
+    },
+    "/api/customers/{customer}/devices": {
+      "get": {
+        "summary": "Customer devices",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          }
+        },
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "summary": "Enroll and download private agent ZIP",
+        "responses": {
+          "200": {
+            "description": "Private ZIP; preserve confidentiality",
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Enrollment"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "enum": [
+                "http://127.0.0.1:8080",
+                "http://localhost:8080"
+              ]
+            }
+          },
+          {
+            "name": "customer",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/devices/{device}": {
+      "delete": {
+        "summary": "Revoke device and cancel pending jobs",
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          }
+        },
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "enum": [
+                "http://127.0.0.1:8080",
+                "http://localhost:8080"
+              ]
+            }
+          },
+          {
+            "name": "device",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/customers/{customer}/jobs": {
+      "get": {
+        "summary": "Customer jobs",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          }
+        },
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/jobs": {
+      "post": {
+        "summary": "Approve and queue one collection",
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          },
+          "409": {
+            "description": "Device lacks reported capability, is busy, or job capacity reached"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "enum": [
+                "http://127.0.0.1:8080",
+                "http://localhost:8080"
+              ]
+            }
+          }
+        ],
+        "description": "Legacy approval route. Cannot approve an agent with a nonempty source fingerprint; use /api/jobs/approve."
+      }
+    },
+    "/api/jobs/{job}": {
+      "get": {
+        "summary": "Scoped job and result",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          }
+        },
+        "parameters": [
+          {
+            "name": "job",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/customers/{customer}/audit": {
+      "get": {
+        "summary": "Scoped audit",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          }
+        },
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/agent/check": {
+      "post": {
+        "summary": "Verify credentials without claiming job",
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          }
+        },
+        "security": [
+          {
+            "device": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://127.0.0.1:8443",
+            "description": "Trust local CA; server name lab.forensics. XP lab routes via 10.0.2.100:8443."
+          }
+        ]
+      }
+    },
+    "/agent/poll": {
+      "post": {
+        "summary": "Heartbeat and claim next job",
+        "responses": {
+          "200": {
+            "description": "One JOB id nonce collector line",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          },
+          "204": {
+            "description": "No job"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Identity"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "device": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://127.0.0.1:8443",
+            "description": "Trust local CA; server name lab.forensics. XP lab routes via 10.0.2.100:8443."
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Agent-Collectors",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 199
+            },
+            "description": "Comma separated implemented IDs, no duplicates, must include F01. Pair with X-Agent-Source. Both absent selects legacy F01/F04/F08."
+          },
+          {
+            "name": "X-Agent-Source",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "description": "Self-reported source fingerprint, not attestation."
+          }
+        ],
+        "description": "Authenticated outbound poll. New agents report catalog/source headers. JOB2 job_id nonce collector_id source_hash is delivered only for matching capabilities and version. Legacy clients receive JOB lines only for legacy approvals."
+      }
+    },
+    "/agent/result": {
+      "post": {
+        "summary": "Upload bounded result",
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error JSON with error field; 400 invalid, 401 unauthenticated, 403 origin/TLS, 404 out of scope, 409 conflict/limit, 429 rate limit, 503 unavailable."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Upload"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "device": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "https://127.0.0.1:8443",
+            "description": "Trust local CA; server name lab.forensics. XP lab routes via 10.0.2.100:8443."
+          }
+        ]
+      }
+    },
+    "/api/invitations": {
+      "post": {
+        "summary": "Create a one-time invitation for an isolated new workspace",
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "JSON error; 400 validation/consent, 401 session/TOTP, 403 invitation/origin, 404 scope, 409 conflict, 413 evidence too large, 429 rate/concurrency, 502 provider error, 503 storage."
+          }
+        },
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "enum": [
+                "http://127.0.0.1:8080",
+                "http://localhost:8080"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/auth/register/start": {
+      "post": {
+        "summary": "Prepare password + TOTP enrollment; secret returned once",
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "JSON error; 400 validation/consent, 401 session/TOTP, 403 invitation/origin, 404 scope, 409 conflict, 413 evidence too large, 429 rate/concurrency, 502 provider error, 503 storage."
+          }
+        },
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "enum": [
+                "http://127.0.0.1:8080",
+                "http://localhost:8080"
+              ]
+            }
+          }
+        ],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationStart"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register/confirm": {
+      "post": {
+        "summary": "Verify TOTP, consume invite, create account and session",
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "JSON error; 400 validation/consent, 401 session/TOTP, 403 invitation/origin, 404 scope, 409 conflict, 413 evidence too large, 429 rate/concurrency, 502 provider error, 503 storage."
+          }
+        },
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "enum": [
+                "http://127.0.0.1:8080",
+                "http://localhost:8080"
+              ]
+            }
+          }
+        ],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationConfirm"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ai/chat": {
+      "post": {
+        "summary": "OpenAI Responses analysis and proposals; never executes jobs",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "JSON error; 400 validation/consent, 401 session/TOTP, 403 invitation/origin, 404 scope, 409 conflict, 413 evidence too large, 429 rate/concurrency, 502 provider error, 503 storage."
+          }
+        },
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "enum": [
+                "http://127.0.0.1:8080",
+                "http://localhost:8080"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AIChat"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agent/build": {
+      "get": {
+        "summary": "Authenticated unsigned build manifest and SHA-256 hashes",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "503": {
+            "description": "Build missing, stale catalog or artifact hash mismatch"
+          }
+        }
+      }
+    },
+    "/api/collectors": {
+      "get": {
+        "summary": "Implemented collector catalog; device capabilities still required",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "503": {
+            "description": "Build missing, stale catalog or artifact hash mismatch"
+          }
+        }
+      }
+    },
+    "/api/agent/update": {
+      "get": {
+        "summary": "Authenticated manual executable update with notices and build manifest; no source code or device credentials",
+        "responses": {
+          "200": {
+            "description": "Update ZIP",
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "503": {
+            "description": "Artifact verification failed"
+          }
+        }
+      }
+    },
+    "/api/jobs/approve": {
+      "post": {
+        "summary": "Explicit customer-scoped approval pinned to displayed agent source fingerprint",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "customer_id",
+                  "device_id",
+                  "collector_id",
+                  "agent_source"
+                ],
+                "properties": {
+                  "customer_id": {
+                    "type": "string"
+                  },
+                  "device_id": {
+                    "type": "string"
+                  },
+                  "collector_id": {
+                    "type": "string",
+                    "enum": [
+                      "F01",
+                      "F04",
+                      "F08",
+                      "F15"
+                    ]
+                  },
+                  "agent_source": {
+                    "type": "string",
+                    "description": "Reported source fingerprint; empty only for legacy agent",
+                    "pattern": "^([a-f0-9]{64})?$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Job queued; includes source version pin"
+          },
+          "400": {
+            "description": "Invalid payload or collector"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "No grant or endpoint unavailable"
+          },
+          "409": {
+            "description": "Agent version changed, capability absent or busy"
+          },
+          "503": {
+            "description": "Storage unavailable"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "session": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "pilot_session"
+      },
+      "device": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Login": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "username",
+          "password",
+          "code"
+        ],
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[0-9]{6}$"
+          }
+        }
+      },
+      "Enrollment": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "label",
+          "host"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "host": {
+            "enum": [
+              "10.0.2.100",
+              "127.0.0.1"
+            ]
+          }
+        }
+      },
+      "JobRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "customer_id",
+          "device_id",
+          "collector_id"
+        ],
+        "properties": {
+          "customer_id": {
+            "type": "string"
+          },
+          "device_id": {
+            "type": "string"
+          },
+          "collector_id": {
+            "enum": [
+              "F01",
+              "F04",
+              "F08",
+              "F15"
+            ]
+          }
+        }
+      },
+      "Identity": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "status",
+          "hostname",
+          "os",
+          "agent_arch",
+          "logical_processors",
+          "ram_total_bytes",
+          "ram_free_bytes",
+          "ipv4"
+        ],
+        "properties": {
+          "status": {
+            "const": "complete"
+          },
+          "hostname": {
+            "type": "string"
+          },
+          "os": {
+            "type": "string"
+          },
+          "agent_arch": {
+            "const": "x86"
+          },
+          "logical_processors": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "ram_total_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "ram_free_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "ipv4": {
+            "type": "array",
+            "maxItems": 128,
+            "items": {
+              "type": "string",
+              "format": "ipv4"
+            }
+          }
+        }
+      },
+      "Upload": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "job_id",
+          "nonce",
+          "collector_id",
+          "data"
+        ],
+        "properties": {
+          "job_id": {
+            "type": "string"
+          },
+          "nonce": {
+            "type": "string"
+          },
+          "collector_id": {
+            "enum": [
+              "F01",
+              "F04",
+              "F08",
+              "F15"
+            ]
+          },
+          "data": {
+            "type": "object",
+            "description": "Untrusted collector-specific JSON, status complete/partial/error; <=256 KiB."
+          }
+        }
+      },
+      "RegistrationStart": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "invitation",
+          "username",
+          "password",
+          "workspace"
+        ],
+        "properties": {
+          "invitation": {
+            "type": "string",
+            "minLength": 64,
+            "maxLength": 64
+          },
+          "username": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{2,63}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 14,
+            "maxLength": 256,
+            "writeOnly": true
+          },
+          "workspace": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        }
+      },
+      "RegistrationConfirm": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "invitation",
+          "code"
+        ],
+        "properties": {
+          "invitation": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      },
+      "AIChat": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "customer_id",
+          "prompt",
+          "api_key",
+          "model",
+          "job_id",
+          "consent"
+        ],
+        "properties": {
+          "customer_id": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 8000
+          },
+          "api_key": {
+            "type": "string",
+            "writeOnly": true,
+            "maxLength": 512
+          },
+          "model": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "job_id": {
+            "type": "string",
+            "description": "Empty string or a completed job belonging to this customer; result limit 32768 bytes."
+          },
+          "consent": {
+            "type": "boolean",
+            "const": true
+          }
+        }
+      }
+    }
+  }
+}

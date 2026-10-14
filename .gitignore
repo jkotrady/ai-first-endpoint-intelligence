@@ -1,0 +1,20 @@
+# Local experiments, media, private licensing records and generated VM state.
+work/
+tools/legacy-intake/result/
+__pycache__/
+*.py[cod]
+*.iso
+*.qcow2
+*.vmdk
+*.vhd
+*.vhdx
+*.img
+*.ova
+*.pfx
+*.p12
+*.key
+.env
+.env.*
+!.env.example
+node_modules/
+*.iso.part

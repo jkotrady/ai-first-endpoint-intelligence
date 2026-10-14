@@ -1,0 +1,15 @@
+{
+  "profile_id": "W01-TCG-PREP-1",
+  "target_os": "Windows XP Professional SP3 x86",
+  "machine": "pc-i440fx-8.2",
+  "cpu": "pentium3",
+  "accelerator": "tcg,thread=single",
+  "cpus": 1,
+  "ram_mib": 1024,
+  "disk_gib": 24,
+  "disk_bus": "ide",
+  "network": "none",
+  "display_device": "VGA",
+  "windows_runtime": "not_run",
+  "purpose": "Offline firmware preparation; not a Windows compatibility or performance result"
+}
