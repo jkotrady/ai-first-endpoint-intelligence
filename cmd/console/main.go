@@ -18,6 +18,7 @@ import (
 func main() {
 	dir := flag.String("state", "work/pilot", "Private pilot state directory")
 	initUser := flag.String("init", "", "Initialize NEW state directory for username, then exit")
+	oidcConfig := flag.String("oidc-config", "", "Owner-only OIDC provider and explicit subject mapping file (optional)")
 	demo := flag.Bool("demo", false, "Run historical synthetic demo without real agents")
 	flag.Parse()
 	if *initUser != "" {
@@ -35,6 +36,14 @@ func main() {
 		app, e := pilot.Open(*dir)
 		if e != nil {
 			log.Fatalf("Open pilot: %v; initialize a new directory with --init USER", e)
+		}
+		if *oidcConfig != "" {
+			ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+			err := app.ConfigureOIDC(ctx, *oidcConfig)
+			cancel()
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 		handler = app.Handler()
 		agent = app.AgentHandler()

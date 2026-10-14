@@ -31,3 +31,5 @@ $('chat-form').onsubmit=async e=>{e.preventDefault();const prompt=$('chat-input'
 window.addEventListener('hashchange',view);view();
 (async()=>{try{const [me,list]=await Promise.all([api('/api/me'),api('/api/collectors')]);catalog=list;for(const c of catalog)names[c.id]=c.name;$('user-name').textContent=me.username;options('customer',me.customers.map(c=>[c.id,c.name]));active=true;await refresh();}catch(e){message(e.message);}})();
 setInterval(()=>{if(active)refresh().catch(e=>message(e.message));},5000);
+
+$('logout-all').onclick=async()=>{try{await api('/auth/sessions',{method:'DELETE'});loggedOut();}catch(e){message(e.message);}};

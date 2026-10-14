@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Install pinned developer tools inside work/, after SHA-256 verification."""
 import hashlib
+import os
+import subprocess
 from pathlib import Path
 import tarfile
 import urllib.request
@@ -25,5 +27,9 @@ def main():
         if not (TOOLS/directory).exists():
             with tarfile.open(archive) as bundle:bundle.extractall(TOOLS,filter='data')
         print('Verified archive; tool directory:',TOOLS/directory)
+    env=dict(os.environ, GOPATH=str(ROOT/'work/go-path'), GOCACHE=str(ROOT/'work/go-cache'),
+             GOTOOLCHAIN='local', GOPROXY='https://proxy.golang.org', GOSUMDB='sum.golang.org')
+    subprocess.run([str(TOOLS/'go/bin/go'),'mod','download'],cwd=ROOT,env=env,check=True)
+    subprocess.run([str(TOOLS/'go/bin/go'),'mod','verify'],cwd=ROOT,env=env,check=True)
 
 if __name__=='__main__':main()

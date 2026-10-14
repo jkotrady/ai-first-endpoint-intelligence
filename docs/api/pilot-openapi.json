@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Internal forensics pilot API",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "description": "Local pilot, not final signed protocol T012. UI mutations require exact Origin header. Agent routes use a separate TLS listener. See ../PILOT-PROTOCOL.md."
   },
   "servers": [
@@ -709,6 +709,95 @@
           },
           "503": {
             "description": "Storage unavailable"
+          }
+        }
+      }
+    },
+    "/auth/methods": {
+      "get": {
+        "summary": "Available login methods (OIDC opt-in)",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Rejected or unavailable; no authentication granted"
+          }
+        },
+        "security": []
+      }
+    },
+    "/auth/oidc/start": {
+      "post": {
+        "summary": "Start browser-bound authorization code + PKCE; same Origin required",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Rejected or unavailable; no authentication granted"
+          }
+        },
+        "security": []
+      }
+    },
+    "/auth/oidc/callback": {
+      "get": {
+        "summary": "Single-use OIDC callback; creates pending local TOTP factor only",
+        "responses": {
+          "303": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Rejected or unavailable; no authentication granted"
+          }
+        },
+        "security": []
+      }
+    },
+    "/auth/oidc/confirm": {
+      "post": {
+        "summary": "Confirm local TOTP after verified explicitly mapped OIDC identity",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Rejected or unavailable; no authentication granted"
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "code"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[0-9]{6}$"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/sessions": {
+      "delete": {
+        "summary": "Revoke all own application sessions and pending OIDC factors",
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Rejected or unavailable; no authentication granted"
           }
         }
       }

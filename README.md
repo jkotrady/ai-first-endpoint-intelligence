@@ -72,3 +72,5 @@ absent from this source snapshot.
 
 Project licensing terms have not yet been selected. Third-party notices are in
 `agent/windows/licenses/`.
+
+Optional organization login is available through OIDC authorization code + PKCE, followed by the existing local TOTP. It requires explicit provider-subject mapping to a local account and grants no additional customer access. See [identity lab and setup](docs/IDENTITY-LAB.md). Provider browser acceptance, recovery and provider-wide logout remain pending.

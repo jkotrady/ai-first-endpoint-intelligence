@@ -1,8 +1,10 @@
 FROM golang:1.27.1 AS build
 WORKDIR /src
-COPY go.mod ./
+COPY go.mod go.sum ./
+RUN go mod download && go mod verify
 COPY cmd ./cmd
 COPY internal ./internal
+COPY collectors ./collectors
 RUN CGO_ENABLED=0 GOTOOLCHAIN=local go build -trimpath -buildvcs=false -o /console ./cmd/console
 FROM scratch
 COPY --from=build /console /console

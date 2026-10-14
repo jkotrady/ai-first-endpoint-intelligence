@@ -12,3 +12,11 @@ wire('login-form',async()=>{await post('/auth/login',{username:$('username').val
 wire('register-form',async()=>{invitation=$('invitation').value.trim();const d=await post('/auth/register/start',{invitation,username:$('register-user').value.trim(),password:$('register-password').value,workspace:$('workspace-name').value});$('register-password').value='';$('register-view').hidden=true;$('enrollment-view').hidden=false;$('setup-secret').textContent=d.secret;$('enroll-account').textContent='Forensics — '+d.account;});
 wire('verify-form',async()=>{await post('/auth/register/confirm',{invitation,code:$('verify-code').value});$('setup-secret').textContent='';invitation='';location.assign('/control');});
 $('copy-secret').onclick=async()=>{try{await navigator.clipboard.writeText($('setup-secret').textContent);$('copy-secret').textContent='Skopírované';}catch{$('portal-message').textContent='Označte a skopírujte celý kľúč ručne.';}};
+
+wire('oidc-factor-form',async()=>{await post('/auth/oidc/confirm',{code:$('oidc-code').value});$('oidc-code').value='';location.assign('/control');});
+$('oidc-start').onclick=async()=>{const b=$('oidc-start');b.disabled=true;try{const d=await post('/auth/oidc/start',{});location.assign(d.authorization_url);}catch(err){$('portal-message').textContent=err.message;b.disabled=false;}};
+if(!registering){
+ fetch('/auth/methods',{credentials:'same-origin'}).then(r=>r.ok?r.json():{}).then(d=>{$('oidc-start').hidden=!d.oidc;}).catch(()=>{});
+ if(location.hash==='#oidc-factor'){$('login-view').hidden=true;$('oidc-factor-view').hidden=false;history.replaceState(null,'','/portal');}
+ if(location.hash==='#oidc-error'){$('portal-message').textContent='Prihlásenie cez organizáciu sa nepodarilo. Začnite znova; ak problém trvá, správca musí overiť priradenie účtu.';history.replaceState(null,'','/portal');}
+}
